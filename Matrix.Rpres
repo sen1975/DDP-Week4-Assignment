@@ -1,0 +1,73 @@
+Matrix Multiplication
+========================================================
+author: Dr.Senthil 
+date: 12th Sep. 2019
+autosize: true
+
+
+
+Objective
+========================================================
+This Shiny App is created to square a matrix
+
+- Input                 : A 2x2 matirx
+- Process @ Server side : Square of the matrix (multiply by itself)
+- Output @ Client side  : Display the Matrix Sqaure 
+
+
+
+UI Code
+========================================================
+
+```{r}
+library(shiny)
+shinyUI(pageWithSidebar(
+    headerPanel("Matrix Multiplication"),
+    sidebarPanel(
+        textInput("one", "First Integer"),
+        textInput("two", "Second Integer"),
+        textInput("three", "Third Integer"),
+        textInput("four", "Fourth Integer"),
+        actionButton("square", "Square")
+    ),
+    mainPanel( uiOutput('matrix') )
+   ) )
+```
+
+Server Code
+========================================================
+
+```{r}
+library(shiny)
+shinyServer(
+    function(input, output) {
+    #observe the square click and perform a reactive expression
+    observeEvent( input$square,{
+        a11 <- as.numeric(input$one)
+        a12 <- as.numeric(input$two)
+        a21 <- as.numeric(input$three)
+        a22 <- as.numeric(input$four)
+        
+        A <- matrix(c(a11,a12,a21,a22),nrow=2,ncol=2)
+        #reactive expression
+        n <-A%*%A
+        output$matrix <- renderTable({
+        matrix <- matrix(rep(2,2),nrow=2,ncol=2)
+        rownames(n) <- c('a','b')
+        n
+        })    } )
+  } 
+)
+    
+```
+
+Output
+======================================================
+```{r}
+library("png")
+pp <- readPNG("F:/R-Programming/DDP/Week4/output.png")
+plot.new() 
+rasterImage(pp,0,0,1,1)
+```
+
+
